@@ -58,7 +58,7 @@ services:
   curl -sSL https://install.python-poetry.org | python3.10 -
 ```
 
-# STEP 2 : INITIALIZE PROJECT
+### STEP 2 : INITIALIZE PROJECT
 
 #### Do this one time when clone source
 
@@ -74,7 +74,7 @@ services:
   $ poetry add "some_library"
   ```
 
-# STEP 3 : RUN PROJECT
+### STEP 3 : RUN PROJECT
 
 - Activate venv poetry :
 
@@ -96,12 +96,12 @@ services:
 
 ![1680764335286](image/README/1680764335286.png)
 
-# ACCESS WEB MANAGEMANT
+# C. ACCESS WEB MANAGEMANT
 
 - **Swagger UI FastAPI**
 
   ```
-  http://localhost:3001/docs
+   - http://localhost:3001/docs
   ```
 
   ![1680765143734](image/README/1680765143734.png)
@@ -110,7 +110,7 @@ services:
   - *Queues of dramatiq (defaut : default, defualt.DQ, defualt.XQ) but in this template queues of dramatiq are file_handler, file_handler.DQ, file_handler.XQ*
 
 ```
-  http://localhost:15672/vituralhost
+ - http://localhost:15672/vituralhost
 ```
 
   ![1680764794780](image/README/1680764794780.png)
@@ -118,6 +118,6 @@ services:
 - **Minio Object Store**
 
   ```
-  http://localhost:9001/browser
+   - http://localhost:9001/browser
   ```
   ![1680765040017](image/README/1680765040017.png)
