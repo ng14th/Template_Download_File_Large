@@ -18,7 +18,8 @@ class AppEnvConfig(BaseSettings):
     MINIO_ENDPOINT : str = ''
     MINIO_ACCESS_KEY : str = ''
     MINIO_SECRET_KEY : str = ''
-    MINIO_SECURE : bool = False    
+    MINIO_SECURE : bool = False
+    MINIO_LIST_BUCKET : list = ['excel','images','video','mp3']  
 
     SECRET_KEY : str =  ''
     SECURITY_ALGORITHM : str = 'HS256'

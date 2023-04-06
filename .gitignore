@@ -4,3 +4,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.pyc
+statics/excel/*
+statics/images/*
+statics/mp3/*
+statics/video/*
+

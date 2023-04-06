@@ -1,10 +1,12 @@
 import logging
 from fastapi import FastAPI, Request, BackgroundTasks
 from app.core.config import settings
-from app.file_handler import router as router_file
+from app.file_handler.view import router as router_file
 from fastapi.responses import JSONResponse, HTMLResponse
 from app.core.schema.exception import ErrorResponseException
 from fastapi.middleware.cors import CORSMiddleware
+from app.core.database.minio import minio_client
+from app.core.startup_event.crontask import events
 
 
 
@@ -14,6 +16,7 @@ app = FastAPI(
     title=settings.APP_PROJECT_NAME,
     docs_url= settings.APP_DOCS_URL,
     openapi_url='/api/openapi.json',
+    on_startup= events
 )
 
 app.add_middleware(CORSMiddleware,
@@ -21,10 +24,10 @@ app.add_middleware(CORSMiddleware,
                    allow_methods = ["POST", "GET", "DELETE", "PUT"],
                    allow_credentials = True,
                    allow_headers = ["*"])
+
 for router in (
     {'module': router_file, 'prefix': '/file',},
 ):
-
     app.include_router(
         router.get('module'),
         prefix=router.get('prefix'),
@@ -44,8 +47,8 @@ async def error_response_exception_handler(request: Request, exception: ErrorRes
             "error_code": exception.error_code
         },
     )
-
-# rabbitmq.initialize_rmq()
+    
+minio_client.generate_buckets()
 
 @app.get("/")
 async def root():    
