@@ -1,6 +1,10 @@
 # A. INTRODUCE PROJECT
 
 ### This is Template using dowload and upload a large file ( Goot at ~ 500mb, Type suport : excel, images, video, mp3 )
+Result : Process and upload file excel about 1M records ~ 400s
+         Process and upload file excel about 500k records ~ 20s
+         Process and upload file excel about 50k records ~ 20s
+         Download file 1M records or 500k records from Minio ~ 0.5s
 
 ##### Technology :
 
