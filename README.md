@@ -116,9 +116,9 @@ services:
 
   - *Queues of dramatiq (defaut : default, defualt.DQ, defualt.XQ) but in this template queues of dramatiq are file_handler, file_handler.DQ, file_handler.XQ*
 
-```
- - http://localhost:15672/vituralhost
-```
+  ```
+   - http://localhost:15672/vituralhost
+  ```
 
   ![1680764794780](image/README/1680764794780.png)
 
