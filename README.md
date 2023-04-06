@@ -1,11 +1,13 @@
 # A. INTRODUCE PROJECT
 
 ### This is Template using dowload and upload a large file ( Goot at ~ 500mb, Type suport : excel, images, video, mp3 )
-- Result : 
-         - Process and upload file excel about 1M records ~ 400s
-         - Process and upload file excel about 500k records ~ 20s
-         - Process and upload file excel about 50k records ~ 20s
-         - Download file 1M records or 500k records from Minio ~ 0.5s
+
+#### Result :
+
+- Process and upload file excel about 1M records ~ 400s
+- Process and upload file excel about 500k records ~ 20s
+- Process and upload file excel about 50k records ~ 20s
+- Download file 1M records or 500k records from Minio ~ 0.5s
 
 ##### Technology :
 
@@ -114,9 +116,9 @@ services:
 
   - *Queues of dramatiq (defaut : default, defualt.DQ, defualt.XQ) but in this template queues of dramatiq are file_handler, file_handler.DQ, file_handler.XQ*
 
-  ```
-   - http://localhost:15672/vituralhost
-  ```
+```
+ - http://localhost:15672/vituralhost
+```
 
   ![1680764794780](image/README/1680764794780.png)
 
