@@ -23,6 +23,8 @@ class AppEnvConfig(BaseSettings):
 
     SECRET_KEY : str =  ''
     SECURITY_ALGORITHM : str = 'HS256'
+    
+    REDIS_ENDPOINT : str = 'redis://:nguyennt63@172.27.230.14:6379/9'
      
     class Config:
         case_sensitive = True

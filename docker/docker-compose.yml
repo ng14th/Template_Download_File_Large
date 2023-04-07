@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:latest
+    restart: always
+    environment:
+      REDIS_PASSWORD: nguyennt63
+    command: redis-server --requirepass nguyennt63
+    ports:
+      - "6379:6379"

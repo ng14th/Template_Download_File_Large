@@ -2,11 +2,11 @@
 
 ### This is Template using dowload and upload a large file ( Goot at ~ 500mb, Type suport : excel, images, video, mp3 )
 
-#### Result :
+#### Result ( With 8 concurrency ):
 
 - Process and upload file excel about 1M records ~ 400s
-- Process and upload file excel about 500k records ~ 20s
-- Process and upload file excel about 50k records ~ 20s
+- Process and upload file excel about 500k records ~ 200s
+- Process and upload file excel about 50k records ~ 17s
 - Download file 1M records or 500k records from Minio ~ 0.5s
 
 ##### Technology :
@@ -15,8 +15,8 @@
 - FastAPI - Main Framework
 - MongoDB - Database
 - Minio - Storage Server
-- Dramatiq - Worker
-- RabbitMQ - Message Broker
+- Celery - Worker
+- Redis - Message Broker
 
 # B. SET UP:
 
@@ -34,29 +34,20 @@ https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/
 sudo docker run -d -p 9000:9000 -p 9001:9001 -e "MINIO_ROOT_USER=minio_scc" -e "MINIO_ROOT_PASSWORD=minio_scc"  quay.io/minio/minio server /data --console-address ":9001"
 ```
 
-#### 3/ RabbitMQ
+#### 3/ Redis :
 
 ```
-version: '3'
+version: '3.8'
 
 services:
-  rabbitmq:
-    image: rabbitmq:3.9.7-management-alpine
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+  redis:
+    image: redis:latest
+    restart: always
     environment:
-      RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: admin
-      RABBITMQ_DEFAULT_VHOST: nguyennt63
-    volumes:
-      - ./rabbitmq_data:/var/lib/rabbitmq
-      - ./rabbitmq_scripts:/opt/rabbitmq_scripts
-    command: >
-      sh -c "rabbitmq-server start && rabbitmqctl add_user user password &&
-             rabbitmqctl set_user_tags user administrator &&
-             rabbitmqctl set_permissions -p my_vhost user '.*' '.*' '.*' &&
-             rabbitmqctl stop && tail -f /dev/null"
+      REDIS_PASSWORD: nguyennt63
+    command: redis-server --requirepass nguyennt63
+    ports:
+      - "6379:6379"
 ```
 
 #### 4/ Poetry
@@ -101,7 +92,7 @@ services:
     $ ./scripts/run_worker.sh
 ```
 
-![1680764335286](image/README/1680764335286.png)
+![1680894270809](image/README/1680894270809.png)
 
 # C. ACCESS WEB MANAGEMANT
 
@@ -110,18 +101,10 @@ services:
   ```
    - http://localhost:3001/docs
   ```
-
   ![1680765143734](image/README/1680765143734.png)
-- **RabbitMQ Managemant**
+- **Redis Managemant**
 
-  - *Queues of dramatiq (defaut : default, defualt.DQ, defualt.XQ) but in this template queues of dramatiq are file_handler, file_handler.DQ, file_handler.XQ*
-
-  ```
-   - http://localhost:15672/vituralhost
-  ```
-
-  ![1680764794780](image/README/1680764794780.png)
-
+  ![1680894334261](image/README/1680894334261.png)
 - **Minio Object Store**
 
   ```

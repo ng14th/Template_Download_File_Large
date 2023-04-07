@@ -1,26 +1,27 @@
-import dramatiq
 import asyncio, os, logging
-from .broker import broker_rqm
+from .celery_worker import celery as celery_conn
 from app.file_handler.models import FileExcel
 from app.core.tools import create_basic_file_excel
 from app.core.database.minio import minio_client
 from datetime import datetime
 
+loop = asyncio.get_event_loop()
 logger = logging.getLogger('Handler File')
 
-@dramatiq.actor(broker=broker_rqm, queue_name="file_handler", 
-                time_limit = 3600000, max_retries = 4,)
-def process_file(message, *args, **kwargs):
+
+
+@celery_conn.task(name='process_excel', exchange = 'default')
+def process_file(data):
     try: 
         start_at = datetime.timestamp(datetime.utcnow())
-        logger.info(f'Start process prepare file excel {message.get("name")}.xlsx at {start_at}')
-        asyncio.run(generate_file_excel_in_database(message))
+        logger.info(f'Start process prepare file excel {data.get("name")}.xlsx at {start_at}')
+        asyncio.run(generate_file_excel_in_database(data))
         # do action notification here to noti file ready for download
         #############################################################
         #############################################################
-        logger.info(f'Done process prepare file excel {message.get("name")}.xlsx at {datetime.timestamp(datetime.utcnow())} excute about {datetime.timestamp(datetime.utcnow())-start_at}s')
+        logger.info(f'Done process prepare file excel {data.get("name")}.xlsx at {datetime.timestamp(datetime.utcnow())} excute about {datetime.timestamp(datetime.utcnow())-start_at}s')
     except Exception as e:
-        raise dramatiq.Retry(message=e, delay=600000)
+        logger.exception(e)
 
 
 async def generate_file_excel_in_database(message):
@@ -41,7 +42,7 @@ async def generate_file_excel_in_database(message):
     #using find() to get all data in collection
     # datas_in_database = await FileExcel.find({}).to_list(50000)
     datas_in_database = FileExcel.collection.aggregate([{
-        "$limit" : 500000
+        "$limit" : 50000
     }])
     async for data in datas_in_database:
         row = [
@@ -73,25 +74,4 @@ async def generate_file_excel_in_database(message):
                 logger.error(e)
     else:
         logger.error(f"Path {file_path} not exist")
-
     
-    
-
-
-    # for i in range(0,10000001):
-    #     new : FileExcel = FileExcel(
-    #         header_1 = f"nguyenthanhnguyen1",
-    #         header_2 = f"nguyenthanhnguyen1{i}",
-    #         header_3 = f"nguyenthanhnguyen1{i}",
-    #         header_4 = f"nguyenthanhnguyen1{i}",
-    #         header_5 = f"nguyenthanhnguyen1{i}",
-    #         header_6 = f"nguyenthanhnguyen1{i}",
-    #         header_7 = f"nguyenthanhnguyen1{i}",
-    #         header_8 = f"nguyenthanhnguyen1{i}",
-    #         header_9 = f"nguyenthanhnguyen1{i}",
-    #         header_10 = f"nguyenthanhnguyen1{i}",
-    #         header_11 = f"nguyenthanhnguyen1{i}",
-    #         header_12 = f"nguyenthanhnguyen1{i}",
-    #         header_13 = f"nguyenthanhnguyen1{i}"
-    #     )
-    #     await new.commit()
