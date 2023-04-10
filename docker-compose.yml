@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  database:
+      environment:
+        POSTGRES_DB: postgres
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_HOST_AUTH_METHOD: trust
+      container_name: postgres
+      image: postgres:latest
+      ports:
+        - 5432:5432
+      volumes:
+        - db_volume:/var/lib/postgresql
+
+volumes:
+  db_volume:
