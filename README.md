@@ -4,8 +4,8 @@
 
 #### Result ( With 8 concurrency ):
 
-- Process and upload file excel about 1M records ~ 400s
-- Process and upload file excel about 500k records ~ 200s
+- Process and upload file excel about 1M records ~ 350s
+- Process and upload file excel about 500k records ~ 190s
 - Process and upload file excel about 50k records ~ 17s
 - Download file 1M records or 500k records from Minio ~ 0.5s
 
@@ -34,20 +34,29 @@ https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/
 sudo docker run -d -p 9000:9000 -p 9001:9001 -e "MINIO_ROOT_USER=minio_scc" -e "MINIO_ROOT_PASSWORD=minio_scc"  quay.io/minio/minio server /data --console-address ":9001"
 ```
 
-#### 3/ Redis :
+#### 3/ RabbitMQ :
 
 ```
-version: '3.8'
+version: '3'
 
 services:
-  redis:
-    image: redis:latest
-    restart: always
-    environment:
-      REDIS_PASSWORD: nguyennt63
-    command: redis-server --requirepass nguyennt63
+  rabbitmq:
+    image: rabbitmq:3.9.7-management-alpine
     ports:
-      - "6379:6379"
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+      RABBITMQ_DEFAULT_VHOST: nguyennt63
+    volumes:
+      - ./rabbitmq_data:/var/lib/rabbitmq
+      - ./rabbitmq_scripts:/opt/rabbitmq_scripts
+    command: >
+      sh -c "rabbitmq-server start && rabbitmqctl add_user user password &&
+             rabbitmqctl set_user_tags user administrator &&
+             rabbitmqctl set_permissions -p my_vhost user '.*' '.*' '.*' &&
+             rabbitmqctl stop && tail -f /dev/null"
 ```
 
 #### 4/ Poetry
@@ -102,9 +111,9 @@ services:
    - http://localhost:3001/docs
   ```
   ![1680765143734](image/README/1680765143734.png)
-- **Redis Managemant**
+- **RabbitMQ Managemant**
 
-  ![1680894334261](image/README/1680894334261.png)
+  ![1681206237914](image/README/1681206237914.png)
 - **Minio Object Store**
 
   ```
