@@ -74,4 +74,3 @@ async def generate_file_excel_in_database(message):
                 logger.error(e)
     else:
         logger.error(f"Path {file_path} not exist")
-    
